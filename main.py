@@ -49,20 +49,37 @@ def quadratic_multiply(x, y):
     return _quadratic_multiply(x,y).decimal_val
 
 def _quadratic_multiply(x, y):
-    ### TODO
-    pass
-    ###
+    # Step One of Lab, Obtaining xvec and yvec which are the binary_vec values of x and y
+    xvec = x.binary_vec
+    yvec = y.binary_vec
+
+    # Step Two of Lab, Pad xvec and yvec so they're the same length
+    xvec, yvec = pad(xvec, yvec)
+    
+    # Step Three of Lab, Base Case
+    if x.decimal_val <= 1 and y.decimal_val <= 1:
+        return BinaryNumber(x.decimal_val * y.decimal_val)
+    
+    # Step Four of lab, splitting xvec and yvec into xleft, xright, yleft
+    else:
+        x_left, x_right = split_number(xvec)
+        y_left, y_right = split_number(yvec)
+        
+        # Steps Five and Six of the Lab, applying the formula 2^n(Xl * Yl) + 2^(n/2)(Xl*YR + XR * YL) + (XR * YR)
+        # Using quadratic multiply and bit shift respectively, also applying .decimal_val and BinaryNumber where applicable
+        left_value = bit_shift(_quadratic_multiply(x_left, y_left), len(xvec)).decimal_val
+        middle_value = bit_shift(BinaryNumber(_quadratic_multiply(x_left, y_right).decimal_val + _quadratic_multiply(x_right, y_left).decimal_val), len(xvec)//2).decimal_val
+        right_value = _quadratic_multiply(x_right, y_right).decimal_val
+
+        # Step Seven of the Lab, adding three the values to get the answer
+        return BinaryNumber(left_value + middle_value + right_value)
 
 
     
-    
+# Step Eight of the Lab, implementing this function to obtain the running time
 def test_quadratic_multiply(x, y, f):
     start = time.time()
-    # multiply two numbers x, y using function f
-    
+    f(x, y)
     return (time.time() - start)*1000
-
-
-    
     
 
